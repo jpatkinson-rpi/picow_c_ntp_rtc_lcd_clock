@@ -49,7 +49,7 @@ static bool dns_request_sent;
 static struct udp_pcb *udp_pcb = NULL; //UDP protocol control block
 
 static int current_day = 0;
-static bool dst = false;
+static bool is_dst = false;
 
 /******************************************************************
 *
@@ -165,7 +165,8 @@ static void ntp_receive(void *arg, struct udp_pcb *pcb, struct pbuf *p, const ip
         
             ntp_tm = gmtime( &unix_epoch );
 
-            if ( dst_check( unix_epoch, 1900+ntp_tm->tm_year) )
+            is_dst = dst_check( unix_epoch, 1900+ntp_tm->tm_year);
+            if ( is_dst )
             {
                 unix_epoch += BST_OFFSET;
                 ntp_tm = gmtime( &unix_epoch );
@@ -264,7 +265,7 @@ int main()
 {      
     setup_default_uart();
 
-    printf("\n\n\nLCD Test: main()\n");
+    printf("\n\n\nNTP Clock: main()\n");
     
     /* PICO-W I2C0 on the default SDA and SCL pins (4, 5) 400KHz I2C */
     i2c_init( PICO_DEFAULT_I2C_INSTANCE(), 400000 );
@@ -295,7 +296,6 @@ int main()
         while (true) 
         {           
             datetime_t t;
-            time_t tsecs;
             char datetime_buf[256];
             
             rtc_get_datetime( &t );
@@ -305,7 +305,7 @@ int main()
             hd44780_lcd_set_cursor(0, 0);
             hd44780_lcd_string( datetime_buf );
 
-            sprintf( datetime_buf, "%02d:%02d:%02d    %03s", t.hour, t.min, t.sec, dst_check( tsecs, t.year) ? timezone[1]:timezone[0] );
+            sprintf( datetime_buf, "%02d:%02d:%02d    %03s", t.hour, t.min, t.sec, is_dst ? timezone[1]:timezone[0] );
             printf("   %s", datetime_buf);
             hd44780_lcd_set_cursor(1, 0);
             hd44780_lcd_string( datetime_buf );

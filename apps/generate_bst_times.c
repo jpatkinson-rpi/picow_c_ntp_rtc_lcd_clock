@@ -42,7 +42,7 @@ static void calculate_bst_times( const int year, time_t *bst_start_time, time_t 
         bst_tm.tm_year = year-1900;
         bst_tm.tm_mon = 2; /* March */
         bst_tm.tm_mday = 31;
-        bst_tm.tm_hour = 0;
+        bst_tm.tm_hour = 2;
         bst_tm.tm_min = 0;
         bst_tm.tm_sec = 0;
     
@@ -68,7 +68,7 @@ static void calculate_bst_times( const int year, time_t *bst_start_time, time_t 
         bst_tm.tm_year = year-1900;
         bst_tm.tm_mon = 9; /* October */
         bst_tm.tm_mday = 31;
-        bst_tm.tm_hour = 0;
+        bst_tm.tm_hour = 2;
         bst_tm.tm_min = 0;
         bst_tm.tm_sec = 0;
         
